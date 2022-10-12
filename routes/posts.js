@@ -1,12 +1,12 @@
 import express from "express";
-import { getPostsBySearch, getPosts, getPost, createPost, updatePost, deletePost, likePost, disLikePost, commentPost, getUserPosts, getSpecificUserPosts } from "../controllers/posts.js";
+import { getPostsBySearch, getPosts, getPost, createPost, updatePost, deletePost, likePost, disLikePost, commentPost, getUserPosts, getSpecificUserPosts } from "../controller/posts.js";
 import auth from '../middleware/auth.js';
 import expressFormidable from 'express-formidable';
 
 const router = express.Router();
 
-router.get('/search', getPostsBySearch );
-router.get('/', getPosts );
+router.get('/search', getPostsBySearch);
+router.get('/', getPosts);
 router.get('/:id', getPost);
 router.patch('/', auth, getUserPosts);
 router.post('/', auth, createPost);
