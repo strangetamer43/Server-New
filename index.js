@@ -12,11 +12,14 @@ import contestRoutes from './routes/contests.js';
 import profileRoutes from './routes/profile.js';
 import taskRoutes from './routes/tasks.js';
 import followersRoutes from './routes/followers.js';
+import questionRouter from "./Routes/Questions.js";
+import userRouter from "./Routes/User.js";
+import imageRouter from "./Routes/Image.js"
 const app = express();
 dotenv.config();
 
-app.use(bodyParser.json({limit: "100mb", extended: true}));
-app.use(bodyParser.urlencoded({limit: "100mb", extended: true}));
+app.use(bodyParser.json({ limit: "100mb", extended: true }));
+app.use(bodyParser.urlencoded({ limit: "100mb", extended: true }));
 app.use(fileUpload({
     useTempFiles: true,
 }));
@@ -28,10 +31,15 @@ app.use('/contests', contestRoutes);
 app.use('/profiles', profileRoutes);
 app.use('/followers', followersRoutes);
 app.use('/tasks', taskRoutes);
+app.use("/", questionRouter);
+app.use("/user", userRouter);
+app.use("/image", imageRouter);
+
+
+
 app.get('/', (req, res) => {
     res.send('App is running');
 });
-
 const PORT = process.env.PORT || 5000;
 
 mongoose.connect(process.env.CONNECTION_URL, { useNewUrlParser: true, useUnifiedTopology: true })
