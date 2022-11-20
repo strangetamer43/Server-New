@@ -90,6 +90,7 @@ export const getQuizById = async (req, res) => {
 export const getAllQuizOfUser = async (req, res) => {
     try {
         const userId = req.params.userId;
+        console.log(userId);
         userModel.findById(userId, async (err, result) => {
             if (err) {
                 res.status(403).json({ message: "User not found" })

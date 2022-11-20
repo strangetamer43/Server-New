@@ -64,3 +64,27 @@ export const signin = async (req, res) => {
 };
 
 
+export const createUser = async (req, res) => {
+    try {
+        console.log(":nw");
+        const data = req.body;
+        console.log(data);
+        await User.findOne({ googleId: data.googleId }, async (err, result) => {
+            if (err) {
+                res.status(403).json({ message: err })
+            } else if (result) {
+                console.log(result);
+                res.status(203).json(result)
+            } else {
+                const result = await User.create({ name: data.name, emailId: data.email, username: data.givenName, googleId: data.googleId })
+                console.log(res);
+                res.status(203).json(result)
+
+            }
+        })
+    } catch (error) {
+        res.status(403).json({ message: error })
+
+    }
+}
+
