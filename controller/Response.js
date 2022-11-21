@@ -193,6 +193,32 @@ export const submittingQuiz = async (req, res) => {
 }
 
 
+export const getResponseByUserName = async (req, res) => {
+    try {
+        const search = req.params.search;
+        const result = await responseModel.aggregate([{
+
+            '$search': {
+                'index': 'default',
+                'text': {
+                    'query': search,
+                    'path': {
+                        'wildcard': '*'
+                    }
+                }
+            }
+
+        }])
+        console.log(result);
+        res.status(203).json(result)
+    } catch (error) {
+        res.status(403).json({ message: error.message })
+
+
+    }
+}
+
+
 // get a response by a question id 
 
 
