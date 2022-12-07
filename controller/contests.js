@@ -3,7 +3,7 @@ import ContestMessage from "../models/contestMessage.js";
 
 export const getContests = async (req, res) => {
     try {
-        const contests = await ContestMessage.find().sort({ _id: -1 });
+        const contests = await ContestMessage.find();
 
         res.status(200).json({ data: contests });
     } catch (error) {

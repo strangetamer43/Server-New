@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import QuestionMessage from "../models/questionMessage.js";
 import { v2 as cloudinary } from 'cloudinary';
 import dotenv from 'dotenv';
+import fs from "fs"
 dotenv.config();
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_NAME,
@@ -10,8 +11,7 @@ cloudinary.config({
 });
 export const getQuestions = async (req, res) => {
     try {
-        const questions = await QuestionMessage.find().sort({ _id: -1 });
-
+        const questions = await QuestionMessage.find();
         res.status(200).json({ data: questions });
     } catch (error) {
         res.status(404).json({ message: error.message });
@@ -56,6 +56,8 @@ export const createQuestion = async (req, res) => {
 
             try {
                 newQuestion.save();
+                fs.unlinkSync(video.tempFilePath)
+
                 res.status(201).json(newQuestion);
             } catch (error) {
                 res.status(409).json({ message: error.message });

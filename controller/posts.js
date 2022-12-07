@@ -3,6 +3,7 @@ import PostMessage from "../models/postMessage.js";
 import User from "../models/user.js";
 import { v2 as cloudinary } from 'cloudinary';
 import dotenv from 'dotenv';
+import fs from "fs"
 dotenv.config();
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_NAME,
@@ -11,7 +12,7 @@ cloudinary.config({
 });
 export const getPosts = async (req, res) => {
     try {
-        const posts = await PostMessage.find().sort({ _id: -1 });
+        const posts = await PostMessage.find();
 
         res.status(200).json({ data: posts });
     } catch (error) {
@@ -57,6 +58,8 @@ export const createPost = async (req, res) => {
 
             try {
                 newPost.save();
+                fs.unlinkSync(video.tempFilePath)
+
                 res.status(201).json(newPost);
             } catch (error) {
                 res.status(409).json({ message: error.message });

@@ -1,7 +1,8 @@
-import mongoose  from "mongoose";
+import mongoose from "mongoose";
 import ProfileMessage from "../models/profileMessage.js";
 
 export const createProfile = async (req, res) => {
+    console.log("creater profile")
     const profile = req.body;
     const newProfile = new ProfileMessage({ ...profile, creator: req.userId, createdAt: new Date().toISOString() });
 
@@ -9,37 +10,41 @@ export const createProfile = async (req, res) => {
         await newProfile.save();
         res.status(201).json(newProfile);
     } catch (error) {
-        res.status(409).json({ message: error.message});
-        
+        res.status(409).json({ message: error.message });
+
     }
 }
 export const getProfile = async (req, res) => {
     const { id } = req.params;
+    console.log(id)
     try {
         const profile = await ProfileMessage.findById(id);
-        
+
         res.status(200).json(profile);
-    }   catch (error) {
-        res.status(404).json({ message: error.message});  
+    } catch (error) {
+        res.status(404).json({ message: error.message });
 
     }
 };
 export const updateProfile = async (req, res) => {
+    console.log("update profile")
     const { id: _id } = req.params;
     const profile = req.body;
+    console.log(profile)
+    console.log(_id)
 
-    if(!mongoose.Types.ObjectId.isValid(_id)) return res.status(404).send('No profile with that ID');
+    if (!mongoose.Types.ObjectId.isValid(_id)) return res.status(404).send('No profile with that ID');
     const updatedProfile = await ProfileMessage.findByIdAndUpdate(_id, { ...profile, _id }, { new: true });
     res.json(updatedProfile);
 }
 export const getUserProfile = async (req, res) => {
-    
+
     const userId = req.userId;
     try {
-            
-        const userProfile = await ProfileMessage.findOne({creator: userId}).sort({ _id: -1 });
-        res.status(200).json({data: userProfile}); 
-        
+
+        const userProfile = await ProfileMessage.findOne({ creator: userId }).sort({ _id: -1 });
+        res.status(200).json({ data: userProfile });
+
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: error });
@@ -48,24 +53,24 @@ export const getUserProfile = async (req, res) => {
 export const getProfiles = async (req, res) => {
     try {
         const profiles = await ProfileMessage.find().sort({ _id: -1 });
-        
-        res.status(200).json({ data: profiles});
-    }   catch (error) {
-        res.status(404).json({ message: error.message});  
+
+        res.status(200).json({ data: profiles });
+    } catch (error) {
+        res.status(404).json({ message: error.message });
 
     }
 };
 export const getSpecificUserProfile = async (req, res) => {
-    
-    const {creator} = req.body;
-    
+
+    const { creator } = req.body;
+
     try {
-            
-        const specificUserProfile = await ProfileMessage.findOne({creator: creator}).sort({ _id: -1 });
-        res.status(200).json({data: specificUserProfile}); 
-        
-        
-        
+
+        const specificUserProfile = await ProfileMessage.findOne({ creator: creator }).sort({ _id: -1 });
+        res.status(200).json({ data: specificUserProfile });
+
+
+
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: error });
