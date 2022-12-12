@@ -1,6 +1,7 @@
 import responseModel from "../models/Response.js";
 import questionModel from "../models/Questions.js";
 import userModel from "../models/user.js";
+
 export const createResponse = async (req, res) => {
     try {
         var newResponse = new responseModel();
@@ -19,6 +20,7 @@ export const submitResponse = async (req, res) => {
         const response = req.body.response
         console.log(response)
         const id = req.body.id;
+
 
         var data = {
             quizId: req.body.quizId,
@@ -42,7 +44,6 @@ export const submitResponse = async (req, res) => {
                         if (result.questions[i].id === response[j].questionId) {
                             if (result.questions[i].questionType === "mcq") {
                                 var option = result.questions[i].options.find(o => o.option === response[j].option)
-                                console.log(option)
                                 correctAnswer += option.value;
                                 j += 1;
                             } else {
@@ -53,6 +54,7 @@ export const submitResponse = async (req, res) => {
                     }
 
                 }
+                console.log(correctAnswer)
                 let grade = ""
                 if (result.scoring === "normal") {
                     for (let i = 0; i < result.result.data.length; i++) {
@@ -69,11 +71,14 @@ export const submitResponse = async (req, res) => {
                                 if (correctAnswer <= result.numericalRange[i].scoreRange[j][0] && correctAnswer >= result.numericalRange[i].scoreRange[j][1]) {
                                     correctAnswer = result.numericalRange[i].scoreRange[j][2]
                                     grade = result.numericalRange[i].scoreRange[j][3]
+                                    break
                                 }
                             }
                         }
                     }
                 }
+                console.log(grade)
+                console.log(correctAnswer)
 
                 data["grade"] = grade;
                 data["correctAnswers"] = correctAnswer;
@@ -175,6 +180,7 @@ export const submittingQuiz = async (req, res) => {
         const userId = req.body.userId;
         const quizId = req.body.quizId;
 
+
         questionModel.findById(quizId, (err, qresult) => {
             if (err) {
                 res.status(403).json({ message: err.message })
@@ -182,6 +188,8 @@ export const submittingQuiz = async (req, res) => {
                 const attempts = qresult.attempts;
                 userModel.findById(userId, (err, uresult) => {
                     const responses = uresult.responses;
+                    console.log(responses[responses.length - 1])
+
                     if (err) {
                         res.status(403).json({ message: err.message })
                     } else {
@@ -189,7 +197,7 @@ export const submittingQuiz = async (req, res) => {
                             res.status(203).json({ message: "User is allowed to take the quiz" })
 
                         }
-                        else if (responses.filter(x => x.valueOf() === quizId).length < attempts) {
+                        else if (responses.filter(x => x.valueOf() == quizId).length < attempts) {
 
                             res.status(203).json({ message: "User is allowed to take the quiz" })
 
@@ -210,6 +218,7 @@ export const submittingQuiz = async (req, res) => {
 
     }
 }
+
 
 
 export const getResponseByUserName = async (req, res) => {

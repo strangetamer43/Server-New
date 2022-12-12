@@ -2,8 +2,8 @@ import mongoose from "mongoose";
 import PostMessage from "../models/postMessage.js";
 import User from "../models/user.js";
 import { v2 as cloudinary } from 'cloudinary';
+import ProfileMessage from "../models/profileMessage.js"
 import dotenv from 'dotenv';
-import fs from "fs"
 dotenv.config();
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_NAME,
@@ -12,7 +12,7 @@ cloudinary.config({
 });
 export const getPosts = async (req, res) => {
     try {
-        const posts = await PostMessage.find();
+        const posts = await PostMessage.find().sort({ _id: -1 });
 
         res.status(200).json({ data: posts });
     } catch (error) {
@@ -58,8 +58,6 @@ export const createPost = async (req, res) => {
 
             try {
                 newPost.save();
-                fs.unlinkSync(video.tempFilePath)
-
                 res.status(201).json(newPost);
             } catch (error) {
                 res.status(409).json({ message: error.message });
@@ -86,7 +84,19 @@ export const createPost = async (req, res) => {
             }
 
         });
+
+    } else if (!image && !video) {
+        const { title, message, tags, name, avatarUrl } = req.body;
+        const newPost = new PostMessage({ title, message, tags, name, avatarUrl, creator: req.userId, createdAt: new Date().toISOString() })
+        try {
+            await newPost.save();
+            res.status(201).json(newPost);
+        } catch (error) {
+            res.status(409).json({ message: error.message });
+
+        }
     }
+
 }
 
 export const updatePost = async (req, res) => {
@@ -144,7 +154,6 @@ export const disLikePost = async (req, res) => {
 
 }
 export const commentPost = async (req, res) => {
-
     const { id } = req.params;
     const message = req.body.value;
     const post = await PostMessage.findById(id);
@@ -155,10 +164,13 @@ export const commentPost = async (req, res) => {
 
 export const getUserPosts = async (req, res) => {
 
-    const userId = req.userId;
+    const userId = req.body.userId;
+    console.log(userId)
     try {
 
+
         const userPosts = await PostMessage.find({ creator: userId }).sort({ _id: -1 });
+        console.log(userPosts)
         res.status(200).json({ data: userPosts });
 
     } catch (error) {
@@ -182,3 +194,14 @@ export const getSpecificUserPosts = async (req, res) => {
         res.status(500).json({ message: error });
     }
 };
+export const getProfileByCreator = async (req, res) => {
+    try {
+
+        const creator = req.body.creator;
+        const user = await ProfileMessage.findOne({ creator: creator })
+        return res.status(203).json(user)
+    } catch (error) {
+        return res.status(403).json(error)
+    }
+
+}

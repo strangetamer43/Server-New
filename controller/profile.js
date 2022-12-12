@@ -18,8 +18,9 @@ export const getProfile = async (req, res) => {
     const { id } = req.params;
     console.log(id)
     try {
+        console.log(id)
         const profile = await ProfileMessage.findById(id);
-
+        console.log(profile)
         res.status(200).json(profile);
     } catch (error) {
         res.status(404).json({ message: error.message });
@@ -35,7 +36,7 @@ export const updateProfile = async (req, res) => {
 
     if (!mongoose.Types.ObjectId.isValid(_id)) return res.status(404).send('No profile with that ID');
     const updatedProfile = await ProfileMessage.findByIdAndUpdate(_id, { ...profile, _id }, { new: true });
-    res.json(updatedProfile);
+    res.status(203).json(updatedProfile);
 }
 export const getUserProfile = async (req, res) => {
 
@@ -61,18 +62,13 @@ export const getProfiles = async (req, res) => {
     }
 };
 export const getSpecificUserProfile = async (req, res) => {
-
-    const { creator } = req.body;
-
+    const creator = req.body.userId;
     try {
-
-        const specificUserProfile = await ProfileMessage.findOne({ creator: creator }).sort({ _id: -1 });
+        const specificUserProfile = await ProfileMessage.findOne({ creator: creator });
         res.status(200).json({ data: specificUserProfile });
-
-
-
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: error });
     }
 };
+

@@ -163,11 +163,12 @@ export const getUserQuestions = async (req, res) => {
 };
 export const getSpecificUserQuestions = async (req, res) => {
 
-    const { creator } = req.body;
+    const creator = req.body.userId;
 
     try {
 
         const specificUserQuestions = await QuestionMessage.find({ creator: creator }).sort({ _id: -1 });
+        console.log(specificUserQuestions)
         res.status(200).json({ data: specificUserQuestions });
 
 
