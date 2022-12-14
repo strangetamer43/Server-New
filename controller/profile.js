@@ -16,7 +16,7 @@ export const createProfile = async (req, res) => {
 }
 export const getProfile = async (req, res) => {
     const { id } = req.params;
-    console.log(id)
+    console.log("get profile", id)
     try {
         console.log(id)
         const profile = await ProfileMessage.findById(id);

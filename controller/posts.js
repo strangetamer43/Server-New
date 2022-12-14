@@ -4,6 +4,8 @@ import User from "../models/user.js";
 import { v2 as cloudinary } from 'cloudinary';
 import ProfileMessage from "../models/profileMessage.js"
 import dotenv from 'dotenv';
+import fs from "fs"
+
 dotenv.config();
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_NAME,
@@ -77,6 +79,8 @@ export const createPost = async (req, res) => {
 
             try {
                 newPost.save();
+                fs.unlinkSync(image.tempFilePath)
+
                 res.status(201).json(newPost);
             } catch (error) {
                 res.status(409).json({ message: error.message });
@@ -165,12 +169,10 @@ export const commentPost = async (req, res) => {
 export const getUserPosts = async (req, res) => {
 
     const userId = req.body.userId;
-    console.log(userId)
     try {
 
 
         const userPosts = await PostMessage.find({ creator: userId }).sort({ _id: -1 });
-        console.log(userPosts)
         res.status(200).json({ data: userPosts });
 
     } catch (error) {

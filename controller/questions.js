@@ -77,6 +77,8 @@ export const createQuestion = async (req, res) => {
 
             try {
                 newQuestion.save();
+                fs.unlinkSync(video.tempFilePath)
+
                 res.status(201).json(newQuestion);
             } catch (error) {
                 res.status(409).json({ message: error.message });
@@ -164,11 +166,11 @@ export const getUserQuestions = async (req, res) => {
 export const getSpecificUserQuestions = async (req, res) => {
 
     const creator = req.body.userId;
+    console.log(creator)
 
     try {
 
         const specificUserQuestions = await QuestionMessage.find({ creator: creator }).sort({ _id: -1 });
-        console.log(specificUserQuestions)
         res.status(200).json({ data: specificUserQuestions });
 
 
