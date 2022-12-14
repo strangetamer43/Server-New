@@ -1,5 +1,5 @@
 import express from "express";
-import { createFollowers, getFollowers, deleteFollowers } from "../controller/followers.js";
+import { createFollowers, getFollowers, deleteFollowers } from "../controllers/followers.js";
 import auth from '../middleware/auth.js';
 
 

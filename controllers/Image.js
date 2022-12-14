@@ -1,5 +1,6 @@
 import express from "express";
 import { v2 as cloudinary } from 'cloudinary';
+import fs from "fs"
 
 
 
@@ -11,7 +12,6 @@ cloudinary.config({
 
 
 const imageUpload = async (req, res) => {
-    console.log("Fdf")
     const image = req.files.image;
 
     console.log(image)

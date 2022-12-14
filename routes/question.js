@@ -1,5 +1,5 @@
 import express from "express";
-import { getQuestionsBySearch, getQuestions, getQuestion, createQuestion, updateQuestion, deleteQuestion, likeQuestion, disLikeQuestion, commentQuestion, getUserQuestions, getSpecificUserQuestions } from "../controller/questions.js";
+import { getQuestionsBySearch, getQuestions, getQuestion, createQuestion, updateQuestion, deleteQuestion, likeQuestion, disLikeQuestion, commentQuestion, getUserQuestions, getSpecificUserQuestions } from "../controllers/questions.js";
 import auth from '../middleware/auth.js';
 
 const router = express.Router();

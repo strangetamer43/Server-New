@@ -1,6 +1,6 @@
 import express, { Router } from "express";
-import { getProfileByCreator } from "../controller/posts.js";
-import { createProfile, updateProfile, getProfiles, getUserProfile, getSpecificUserProfile, getProfile } from "../controller/profile.js";
+import { getProfileByCreator } from "../controllers/posts.js";
+import { createProfile, updateProfile, getProfiles, getUserProfile, getSpecificUserProfile, getProfile } from "../controllers/profile.js";
 import auth from '../middleware/auth.js';
 
 const router = express.Router();

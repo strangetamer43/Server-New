@@ -1,5 +1,5 @@
 import express from "express";
-import { getContestsBySearch, getContests, getContest, createContest, updateContest, deleteContest, likeContest, disLikeContest, commentContest, registeredUser } from "../controller/contests.js";
+import { getContestsBySearch, getContests, getContest, createContest, updateContest, deleteContest, likeContest, disLikeContest, commentContest, registeredUser } from "../controllers/contests.js";
 import auth from '../middleware/auth.js';
 
 const router = express.Router();
