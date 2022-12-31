@@ -20,6 +20,7 @@ const profileSchema = mongoose.Schema({
         end: String,
         current: Boolean
     }]
+
 })
 
 const ProfileMessage = mongoose.model('ProfileMessage', profileSchema);
