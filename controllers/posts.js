@@ -5,6 +5,7 @@ import { v2 as cloudinary } from 'cloudinary';
 import ProfileMessage from "../models/profileMessage.js"
 import dotenv from 'dotenv';
 import fs from "fs"
+import { constants } from "buffer";
 
 dotenv.config();
 cloudinary.config({
@@ -207,3 +208,20 @@ export const getProfileByCreator = async (req, res) => {
     }
 
 }
+
+
+export const getPostLazyLoading = async (req, res) => {
+    try {
+        const { page } = req.body;
+        const LIMIT = 2
+        const startIndex = (Number(page) - 1) * LIMIT;
+
+        const posts = await PostMessage.find().sort({ _id: -1 }).limit(LIMIT).skip(startIndex)
+        res.status(203).json(posts)
+    } catch (error) {
+        console.log("fkdpk")
+        console.log(error)
+        res.status(403).json(error)
+
+    }
+}   
