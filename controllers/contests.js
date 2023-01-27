@@ -116,3 +116,19 @@ export const commentContest = async (req, res) => {
     const updatedContest = await ContestMessage.findByIdAndUpdate(id, contest, { new: true });
     res.json(updatedContest);
 }
+
+export const getContestsLazyLoading = async (req, res) => {
+    try {
+        const { page } = req.body;
+        const LIMIT = 2
+        const startIndex = (Number(page) - 1) * LIMIT;
+
+        const contests = await ContestMessage.find().sort({ _id: -1 }).limit(LIMIT).skip(startIndex)
+        res.status(203).json(contests)
+    } catch (error) {
+        console.log("fkdpk")
+        console.log(error)
+        res.status(403).json(error)
+
+    }
+} 
